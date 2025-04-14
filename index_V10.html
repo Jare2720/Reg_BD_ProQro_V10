@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Clientes - Proyéctate en Querétaro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+      border-radius: 10px;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 100px;
+      height: auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #444;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://jare2720.github.io/Reg_BD_ProQro_V10/logo.png" alt="Logo Proyéctate en Querétaro" />
+    </div>
+    <h2>Registro de Clientes</h2>
+    <form id="clienteForm">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" required />
+
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" name="correo" required />
+
+      <label for="tipo">Tipo de propiedad</label>
+      <select id="tipo" name="tipo" required>
+        <option value="">Selecciona una opción</option>
+        <option>Casa</option>
+        <option>Departamento</option>
+        <option>Terreno</option>
+        <option>Otro</option>
+      </select>
+
+      <label for="zona">Zona de interés</label>
+      <input type="text" id="zona" name="zona" placeholder="Ej. Zibatá, El Refugio..." />
+
+      <label for="presupuesto">Rango de precio</label>
+      <select id="presupuesto" name="presupuesto" required>
+        <option value="">Selecciona un rango</option>
+        <option>Hasta $1 millón</option>
+        <option>$1M - $2M</option>
+        <option>$2M - $3M</option>
+        <option>Más de $3M</option>
+      </select>
+
+      <label for="origen">¿Cómo te enteraste de nosotros?</label>
+      <select id="origen" name="origen" required>
+        <option value="">Selecciona una opción</option>
+        <option>Facebook</option>
+        <option>Instagram</option>
+        <option>Google</option>
+        <option>Recomendación</option>
+        <option>Página Web</option>
+        <option>EasyBroker</option>
+        <option>Proppit</option>
+      </select>
+
+      <label for="motivo">¿Buscas para vivir o invertir?</label>
+      <select id="motivo" name="motivo" required>
+        <option value="">Selecciona una opción</option>
+        <option>Vivir</option>
+        <option>Invertir</option>
+        <option>Ambos</option>
+      </select>
+
+      <label for="tiempo">¿En cuánto tiempo piensas comprar?</label>
+      <select id="tiempo" name="tiempo" required>
+        <option value="">Selecciona una opción</option>
+        <option>De inmediato</option>
+        <option>1 a 3 meses</option>
+        <option>3 a 6 meses</option>
+        <option>Más de 6 meses</option>
+      </select>
+
+      <label for="comentarios">Comentarios adicionales</label>
+      <textarea id="comentarios" name="comentarios" rows="3"></textarea>
+
+      <button type="submit">Enviar registro</button>
+      <div class="message" id="mensaje"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("clienteForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const mensaje = document.getElementById("mensaje");
+      mensaje.textContent = "Enviando...";
+
+      const datos = {
+        nombre: document.getElementById("nombre").value,
+        telefono: document.getElementById("telefono").value,
+        correo: document.getElementById("correo").value,
+        tipo: document.getElementById("tipo").value,
+        zona: document.getElementById("zona").value,
+        presupuesto: document.getElementById("presupuesto").value,
+        origen: document.getElementById("origen").value,
+        motivo: document.getElementById("motivo").value,
+        tiempo: document.getElementById("tiempo").value,
+        comentarios: document.getElementById("comentarios").value,
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbwvVx28TONBRyXJalzfraj8OErDPRrcVQAtll7sTGBWQKbDagUDRk6amr6QHJjsd-PF/exec", {
+        method: "POST",
+        body: JSON.stringify(datos),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(res => res.json())
+        .then(response => {
+          mensaje.style.color = response.success ? "green" : "red";
+          mensaje.textContent = response.message;
+          if (response.success) document.getElementById("clienteForm").reset();
+        })
+        .catch(error => {
+          mensaje.style.color = "red";
+          mensaje.textContent = "❌ Hubo un error: " + error.message;
+        });
+    });
+  </script>
+</body>
+</html>
